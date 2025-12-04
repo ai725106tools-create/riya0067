@@ -1,0 +1,105 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now())
+  profile   Profile?
+  tasks     Task[]
+  habits    Habit[]
+  topics    Topic[]
+  quizResults QuizResult[]
+  completionLogs CompletionLog[]
+}
+
+model Profile {
+  id            Int    @id @default(autoincrement())
+  userId        Int    @unique
+  dailyStudyMins Int   @default(120)
+  preferredBlocks Json? 
+  createdAt     DateTime @default(now())
+  user          User @relation(fields: [userId], references: [id])
+}
+
+model Course {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  title     String
+  meta      Json? 
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id])
+}
+
+model Topic {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  name        String
+  mastery     Float   @default(0.5)
+  spacedScore Float   @default(0)
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  tasks Task[]
+  quizResults QuizResult[]
+}
+
+model Task {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  title         String
+  description   String?
+  topicId       Int?
+  topicText     String?
+  durationMins  Int
+  dueDate       DateTime?
+  scheduledFor  DateTime?
+  priority      Int      @default(0)
+  spacedScore   Float    @default(0)
+  completed     Boolean  @default(false)
+  missed        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  topic Topic? @relation(fields: [topicId], references: [id])
+  completionLogs CompletionLog[]
+}
+
+model Habit {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  name      String
+  cadence   String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+}
+
+model CompletionLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  taskId      Int?
+  status      String
+  durationMins Int?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  task Task? @relation(fields: [taskId], references: [id])
+}
+
+model QuizResult {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  topicId   Int?
+  score     Float
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  topic Topic? @relation(fields: [topicId], references: [id])
+}

@@ -1,0 +1,24 @@
+{
+  "name": "focus-flow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prisma": "prisma",
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "next": "13.4.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "prisma": "5.10.1",
+    "@prisma/client": "5.10.1",
+    "tailwindcss": "3.4.7",
+    "autoprefixer": "10.4.14",
+    "postcss": "8.4.24",
+    "date-fns": "2.30.0",
+    "ics": "2.41.0"
+  }
+}
